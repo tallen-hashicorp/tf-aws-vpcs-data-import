@@ -9,12 +9,10 @@ data "aws_vpcs" "all_vpcs" {
 }
 
 locals {
-    existing_vpc_ids = toset(data.aws_vpcs.all_vpcs.ids)
-    new_vpc_needed   = setsubtract(toset(["create"]), local.existing_vpc_ids)
+  existing_vpcs = data.aws_vpcs.all_vpcs.ids
 }
-
 import {
-  for_each = local.existing_vpc_ids
+  for_each = local.existing_vpcs
 
   to = aws_vpc.starter_vpc[each.value]
   id = "${each.value}"
@@ -22,7 +20,7 @@ import {
 
 
 resource "aws_vpc" "starter_vpc" {
-  for_each = local.new_vpc_needed
+  for_each = toset(local.existing_vpcs)
   cidr_block = "10.0.0.0/16"
   tags = {
     service = "data-import-demo"
