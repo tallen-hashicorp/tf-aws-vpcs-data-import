@@ -20,7 +20,7 @@ import {
 
 
 resource "aws_vpc" "starter_vpc" {
-  for_each = toset(local.existing_vpcs)
+  for_each = length(local.existing_vpcs) > 0 ? toset(local.existing_vpcs) : toset(["default_vpc"])
   cidr_block = "10.0.0.0/16"
   tags = {
     service = "data-import-demo"
