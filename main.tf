@@ -11,6 +11,7 @@ data "aws_vpcs" "all_vpcs" {
 locals {
   existing_vpcs = data.aws_vpcs.all_vpcs.ids
 }
+
 import {
   for_each = local.existing_vpcs
 
